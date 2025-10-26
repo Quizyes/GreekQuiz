@@ -138,7 +138,7 @@ void App::getAlts()
             d.parse = st.getColumn("parse").getString();
             d.lesson = st.getColumn("lesson").getInt();
             alts.push_back(d);
-            printDbEntry(d);
+            // printDbEntry(d);
         }
         for (auto &alt : alts)
         {
@@ -218,6 +218,7 @@ void App::printDbEntry(dbEntry entry)
     std::cout << "entry.inflected:\t" << entry.inflected << std::endl;
     std::cout << "entry.parse:\t" << entry.parse << std::endl;
     std::cout << "entry.lesson:\t" << entry.lesson << std::endl;
+    std::cout << ")" << std::endl;
 }
 
 } // namespace gwr::gkqz
