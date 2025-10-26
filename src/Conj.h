@@ -12,8 +12,8 @@ namespace gwr::gkqz
 
 typedef struct dbEntry
 {
-    int id;
-    std::string head, inflected, parse;
+    int id{0}, lesson{0};
+    std::string head{""}, inflected{""}, parse{""};
     void clear()
     {
         head.clear();
@@ -34,6 +34,7 @@ class QuizItem : public visage::Frame
     void check();       // is head correct, is parse?
     void readEntries(); // load input into fields
     void color();       // color entries by correctness
+    void show();        // show first correct answer
     bool isCorrect{true};
     dbEntry userForm;             // full entry data for one question
     std::vector<dbEntry> dbForms; // for each user form, check for (legal) alts, push them in

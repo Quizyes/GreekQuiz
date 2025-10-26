@@ -81,9 +81,15 @@ void App::newQuiz(int lessonNum)
     clearColors();
     lessonNum = std::clamp(lessonNum, 2, 20);
     lesson.setText(lessonNum);
-    auto st = dbm.getStmt("select id, inflected, head, parse from morphs where lesson <= ? order "
-                          "by random() limit 5");
+    auto st =
+        dbm.getStmt("select id, inflected, head, parse, lesson from morphs where lesson <= ? order "
+                    "by random() limit 5");
     st.bind(1, lessonNum);
+
+    for (size_t j = 0; j < 5; ++j)
+    {
+        cs[j]->dbForms.clear();
+    }
 
     size_t i{0};
     while (st.executeStep())
@@ -93,16 +99,49 @@ void App::newQuiz(int lessonNum)
         d.inflected = st.getColumn("inflected").getString();
         d.head = st.getColumn("head").getString();
         d.parse = st.getColumn("parse").getString();
+        d.lesson = st.getColumn("lesson").getInt();
         cs[i]->dbForms.push_back(d);
         cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
-        cs[i]->headwordDb.setText(d.id);
-        std::cout << *cs[i];
+
         ++i;
     }
+
+    getAlts();
+
+    // std::cout << *cs[i];
 
     userInputIsShown = true;
     quizIsMarked = false;
     redraw();
+}
+
+void App::getAlts()
+{
+    for (size_t i = 0; i < 5; ++i)
+    {
+        std::vector<dbEntry> alts;
+        dbEntry root;
+        root.id = cs[i]->dbForms[0].id;
+        root.head = cs[i]->dbForms[0].head;
+        root.inflected = cs[i]->dbForms[0].inflected;
+        root.parse = cs[i]->dbForms[0].parse;
+        auto st = dbm.getStmt("select * from morphs where inflected = ?");
+        st.bind(1, root.inflected);
+        while (st.executeStep())
+        {
+            dbEntry d;
+            d.id = st.getColumn("id").getInt();
+            d.head = st.getColumn("inflected").getInt();
+            d.inflected = st.getColumn("head").getInt();
+            d.parse = st.getColumn("parse").getInt();
+            d.lesson = st.getColumn("lesson").getInt();
+            alts.push_back(d);
+        }
+        for (auto &alt : alts)
+        {
+            cs[i]->dbForms.push_back(alt);
+        }
+    }
 }
 
 void App::markQuiz()
@@ -116,6 +155,8 @@ void App::markQuiz()
     for (auto &conj : cs)
     {
         conj->check();
+        conj->show();
+        conj->headwordDb.setText(bc::beta2greek(conj->dbForms[0].head));
     }
 
     // color fields by correctness

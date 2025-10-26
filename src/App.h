@@ -23,6 +23,7 @@ class App : public visage::ApplicationWindow
     void newQuiz();
     void newQuiz(int lesson);
     void markQuiz();
+    void getAlts();
     void compare(); // swap btwn user input and db
     void readContents();
     void color();

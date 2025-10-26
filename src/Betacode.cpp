@@ -2,17 +2,17 @@
 
 std::string Betacode::beta2greek(std::string &beta)
 {
-    char cstr[150];
+    char cstr[150]{0};
     strncpy(cstr, beta.c_str(), beta.length());
-    char gkstr[150];
+    char gkstr[150]{0};
     ub_beta2greek(cstr, 150, gkstr, 150);
     return std::string(gkstr);
 }
 std::string Betacode::greek2beta(std::string &greek)
 {
-    char gkstr[150];
+    char gkstr[150]{0};
     strncpy(gkstr, greek.c_str(), greek.length());
-    char cstr[150];
+    char cstr[150]{0};
     ub_beta2greek(cstr, 150, gkstr, 150);
     return std::string(cstr);
 }
