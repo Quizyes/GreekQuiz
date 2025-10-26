@@ -11,6 +11,7 @@
 #include "DbManager.h"
 #include "Label.h"
 #include "Conj.h"
+#include "Betacode.h"
 
 namespace gwr::gkqz
 {
@@ -51,6 +52,7 @@ class App : public visage::ApplicationWindow
     visage::TextEditor lesson;
     Conjugation c1, c2, c3, c4, c5;
     std::array<Conjugation *, 5> cs;
+    // Betacode b;
 };
 
 } // namespace gwr::gkqz

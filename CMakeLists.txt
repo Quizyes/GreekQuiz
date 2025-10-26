@@ -33,6 +33,10 @@ add_executable(${PROJECT_NAME}
   src/App.cpp
   src/DbManager.cpp
   src/Conj.cpp
+  src/Betacode.cpp
+  unibetacode/ub_utf8.c
+  unibetacode/ub_greek2beta.c
+  unibetacode/ub_beta2greek.c
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -52,7 +56,7 @@ endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-include_directories(PUBLIC libs/visage libs/SQLiteCpp src)
+include_directories(PUBLIC libs/visage libs/SQLiteCpp unibetacode src)
 
 if (EMSCRIPTEN)
     MESSAGE(STATUS "Building for WebAssembly")    

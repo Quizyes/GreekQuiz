@@ -3,6 +3,7 @@
 #define QLOG(msg) std::cerr << "DEBUG: " << msg << std::endl;
 
 using namespace visage::dimension;
+using bc = Betacode;
 
 namespace gwr::gkqz
 {
@@ -32,7 +33,13 @@ App::App() : dbm(":memory:")
     markBtn.layout().setDimensions(25_vw, 100_vh);
 
     newBtn.setFont(font.withSize(25.f));
-    newBtn.onMouseDown() = [&](const visage::MouseEvent &e) { newQuiz(); };
+    newBtn.onMouseDown() = [&](const visage::MouseEvent &e) {
+        int head = lesson.text().toInt();
+        if (head > 1)
+            newQuiz(head);
+        else
+            newQuiz();
+    };
 
     markBtn.setFont(font.withSize(25.f));
     markBtn.onMouseDown() = [&](const visage::MouseEvent &e) { markQuiz(); };
@@ -71,25 +78,24 @@ void App::newQuiz() { newQuiz(2); }
 
 void App::newQuiz(int lessonNum)
 {
-    QLOG("made it to newquiz(int)")
     clearColors();
-    QLOG("cleared colors")
-
-    auto st = dbm.getStmt("select * from morphs where lesson <= ? order by random() limit 5");
+    lessonNum = std::clamp(lessonNum, 2, 20);
+    lesson.setText(lessonNum);
+    auto st = dbm.getStmt("select id, inflected, head, parse from morphs where lesson <= ? order "
+                          "by random() limit 5");
     st.bind(1, lessonNum);
-    QLOG("bound query")
 
     size_t i{0};
     while (st.executeStep())
     {
-        QLOG("step")
         dbEntry d;
         d.id = st.getColumn("id").getInt();
         d.inflected = st.getColumn("inflected").getString();
         d.head = st.getColumn("head").getString();
         d.parse = st.getColumn("parse").getString();
         cs[i]->dbForms.push_back(d);
-        cs[i]->promptDb.setText(d.inflected);
+        cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
+        cs[i]->headwordDb.setText(d.id);
         ++i;
     }
 
@@ -134,12 +140,8 @@ void App::draw(visage::Canvas &canvas)
 
 void App::clearColors()
 {
-    QLOG("clearing colors")
     for (auto conj : cs)
     {
-        QLOG("clearing one pair")
-        QLOG("conj: " << conj)
-        QLOG("headword: " << conj->headwordUser.text().toUtf8())
         conj->headwordUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
         conj->parseUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
     }
