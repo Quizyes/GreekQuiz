@@ -7,8 +7,7 @@ set(PROJECT_NAME "GreekQuiz")
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
-
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (APPLE AND NOT EMSCRIPTEN)
 enable_language(OBJC)
@@ -23,7 +22,7 @@ endif()
 
 # submodules
 add_subdirectory(libs/visage)
-add_subdirectory(libs/SQLiteCpp)
+add_subdirectory(libs/SQLiteCPP)
 
 # resources (need a polytonic Greek font)
 file(GLOB_RECURSE FONT_TTF_FILES fonts/*.ttf)
@@ -33,6 +32,7 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/App.cpp
   src/DbManager.cpp
+  src/Conj.cpp
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -78,7 +78,6 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
   visage
   EmbeddedFontResources
-  EmbeddedImageResources
   SQLiteCpp
   sqlite3 # ${SQL} 
 )

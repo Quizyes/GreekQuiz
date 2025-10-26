@@ -1,0 +1,6 @@
+[submodule "libs/visage"]
+	path = libs/visage
+	url = https://github.com/VitalAudio/visage.git
+[submodule "libs/SQLiteCPP"]
+	path = libs/SQLiteCPP
+	url = https://github.com/SRombauts/SQLiteCpp.git
