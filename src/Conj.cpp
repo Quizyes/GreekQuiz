@@ -26,51 +26,58 @@ std::ostream &operator<<(std::ostream &os, const QuizItem &qi)
 
 QuizItem::QuizItem()
 {
-    setFlexLayout(true);
+    layout().setFlex(true);
     layout().setFlexRows(false);
-    addChild(prompt, true);
-    addChild(headword, true);
-    addChild(parse, true);
-    layout().setPadding(2.f);
+    addChild(&prompt, true);
+    addChild(&headword, true);
+    addChild(&parse, true);
+    // layout().setPadding(2.f);
 
     headword.layout().setFlexRows(true);
-    headword.layout().setPaddingLeft(5.f);
+    headword.layout().setPadding(2.f);
+    parse.setFlexLayout(true);
+    parse.layout().setFlex(true);
     parse.layout().setFlexRows(true);
-    parse.layout().setPaddingLeft(5.f);
-    parse.layout().setDimensions(60_vw, 100_vh);
+    parse.layout().setPadding(2.f);
+    parse.layout().setDimensions(50_vw, 100_vh);
+    prompt.layout().setPadding(2.f);
 
-    for (auto &fr : {&headword, &prompt})
+    for (auto &fr : {&prompt, &headword})
     {
         fr->setFlexLayout(true);
         fr->layout().setDimensions(25_vw, 100_vh);
     }
 
-    headword.addChild(headwordUser, true);
-    headword.addChild(headwordDb, true);
+    headword.addChild(&headwordUser, true);
+    headword.addChild(&headwordDb, true);
 
-    parse.addChild(parseUser, true);
-    parse.addChild(parseDb, true);
+    parse.addChild(&parseUser, true);
+    parse.addChild(&parseDb, true);
 
-    prompt.addChild(promptDb, true);
-    promptDb.layout().setDimensions(100_vw, 100_vh);
+    prompt.addChild(&promptDb, true);
+
     promptDb.setFont(fontGk.withSize(30.f));
+    promptDb.layout().setDimensions(100_vw, 100_vh);
+    promptDb.layout().setMarginTop(2.f);
 
     headwordDb.setFont(fontGk.withSize(30.f));
     headwordDb.layout().setDimensions(100_vw, 100_vh);
+    headwordDb.layout().setMarginTop(2.f);
 
     for (auto &fr : {&headwordUser, &parseUser})
     {
         fr->setFont(fontGk.withSize(20.f));
         fr->setJustification(visage::Font::Justification::kCenter);
-        fr->layout().setDimensions(95_vw, 45_vh);
+        fr->layout().setDimensions(100_vw, 50_vh);
         fr->setTextFieldEntry();
     }
     headwordUser.setDefaultText("headword");
     parseUser.setDefaultText("parse");
 
-    headwordDb.layout().setDimensions(95_vw, 45_vh);
+    headwordDb.layout().setDimensions(100_vw, 50_vh);
     parseDb.setFont(fontEn.withSize(30.f));
-    parseDb.layout().setDimensions(95_vw, 45_vh);
+    parseDb.layout().setDimensions(100_vw, 50_vh);
+    parseDb.layout().setMarginTop(2.f);
 
     promptDb.outline = true;
     headwordDb.outline = true;
@@ -83,11 +90,7 @@ QuizItem::QuizItem()
     // readEntries();
 }
 
-void QuizItem::draw(visage::Canvas &canvas)
-{
-    canvas.setColor(0xff000000);
-    // canvas.rectangleBorder(0, 0, width(), height(), 1.0f);
-}
+void QuizItem::draw(visage::Canvas &canvas) { canvas.setColor(0xff000000); }
 
 void QuizItem::check()
 {
