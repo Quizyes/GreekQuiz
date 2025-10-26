@@ -13,7 +13,17 @@ class DbManager
     SQLite::Database db;
     DbManager(std::string dbFileName);
     SQLite::Statement getStmt(std::string s);
-    void secondHalf();
+    void part1();
+    void part2();
+    void part3();
+    void part4();
+    void part5();
+    void part6();
+    void part7();
+    void part8();
+    void part9();
+    void part10();
+    void part11();
     const char *dbschema = R"foo(
 CREATE TABLE morphs(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +34,6 @@ lesson INTEGER
 );
 
  )foo";
-
 };
 
 } // namespace gwr::gkqz

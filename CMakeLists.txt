@@ -27,6 +27,9 @@ add_subdirectory(libs/SQLiteCPP)
 # resources (need a polytonic Greek font)
 file(GLOB_RECURSE FONT_TTF_FILES fonts/*.ttf)
 add_embedded_resources(EmbeddedFontResources "example_fonts.h" "resources::fonts" "${FONT_TTF_FILES}")
+file(GLOB_RECURSE IMAGE_FILES images/*.png)
+add_embedded_resources(EmbeddedImageResources "example_images.h" "resources::images" "${IMAGE_FILES}")
+
 
 add_executable(${PROJECT_NAME} 
   src/main.cpp

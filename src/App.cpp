@@ -36,11 +36,11 @@ App::App() : dbm(":memory:")
 
     newBtn.setFont(font.withSize(25.f));
     newBtn.onMouseDown() = [&](const visage::MouseEvent &e) {
-        int head = lesson.text().toInt();
-        if (head > 1)
-            newQuiz(head);
-        else
+        auto text = lesson.text();
+        if (text.isEmpty())
             newQuiz();
+        else
+            newQuiz(text.toInt());
     };
 
     markBtn.setFont(font.withSize(25.f));

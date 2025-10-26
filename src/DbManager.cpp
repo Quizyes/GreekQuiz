@@ -20,6 +20,21 @@ DbManager::DbManager(std::string dbFilename)
     // );
 
     db.exec(dbschema);
+    part1();
+    part2();
+    part3();
+    part4();
+    part5();
+    part6();
+    part7();
+    part8();
+    part9();
+    part10();
+    part11();
+}
+
+void DbManager::part1()
+{
     auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
 
     st.bind(1, "a)/nqrwpoi");
@@ -4999,6 +5014,12 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part2()
+{
+
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "lu/omai");
     st.bind(2, "lu/w");
     st.bind(3, "pres ind mp 1st sg");
@@ -9990,6 +10011,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part3()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "a)/gonta");
     st.bind(2, "a)/gw");
     st.bind(3, "pres part act masc acc sg");
@@ -14988,6 +15014,10 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+void DbManager::part4()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "tugxa/nonta");
     st.bind(2, "tugxa/nw");
     st.bind(3, "pres part act pl neut nom");
@@ -19986,6 +20016,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part5()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "paideu/ontas");
     st.bind(2, "paideu/w");
     st.bind(3, "pres part act masc acc pl");
@@ -24977,6 +25012,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part6()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "a)/llou");
     st.bind(2, "a)/llos");
     st.bind(3, "masc gen sg");
@@ -29975,6 +30015,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part7()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "a)ciwte/rwn");
     st.bind(2, "a)/cios");
     st.bind(3, "fem gen pl");
@@ -34966,6 +35011,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part8()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "poih/sesqai");
     st.bind(2, "poie/w");
     st.bind(3, "fut inf mid");
@@ -39964,6 +40014,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part9()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "hu(/ronto");
     st.bind(2, "eu(ri/skw");
     st.bind(3, "aor ind mid 3rd pl");
@@ -44962,6 +45017,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part10()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "e)qelh/santa");
     st.bind(2, "e)qe/lw");
     st.bind(3, "aor part act pl neut nom");
@@ -49953,6 +50013,11 @@ DbManager::DbManager(std::string dbFilename)
     st.exec();
     st.reset();
     st.clearBindings();
+}
+
+void DbManager::part11()
+{
+    auto st = getStmt("INSERT INTO morphs (inflected, head, parse, lesson) VALUES(?, ?, ?, ?)");
     st.bind(1, "dido/ntes");
     st.bind(2, "di/dwmi");
     st.bind(3, "pres part act pl masc nom");
@@ -54735,7 +54800,5 @@ DbManager::DbManager(std::string dbFilename)
     st.reset();
     st.clearBindings();
 }
-
-void DbManager::secondHalf() {}
 
 } // namespace gwr::gkqz
