@@ -1,4 +1,5 @@
 #include "Betacode.h"
+#include <cstring>
 
 std::string Betacode::beta2greek(std::string &beta)
 {
