@@ -1,3 +1,6 @@
--- subclass TextEditor for Greek input
 -- implement check() and color() on QuizItems
 -- implement markQuiz() 
+
+-- subclass TextEditor for Greek input
+-- [prep]:  make a dummy class w/lots of logging
+--          to trace code paths, etc.
