@@ -99,19 +99,18 @@ void App::newQuiz(int lessonNum)
     {
         dbEntry d;
         d.id = st.getColumn("id").getInt();
-        d.inflected = st.getColumn("inflected").getString();
         d.head = st.getColumn("head").getString();
+        d.inflected = st.getColumn("inflected").getString();
         d.parse = st.getColumn("parse").getString();
         d.lesson = st.getColumn("lesson").getInt();
         cs[i]->dbForms.push_back(d);
         cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
-
         ++i;
     }
 
     getAlts();
 
-    // std::cout << *cs[i];
+    // std::cout << *(cs[i]);
 
     userInputIsShown = true;
     quizIsMarked = false;
@@ -134,11 +133,12 @@ void App::getAlts()
         {
             dbEntry d;
             d.id = st.getColumn("id").getInt();
-            d.head = st.getColumn("inflected").getInt();
-            d.inflected = st.getColumn("head").getInt();
-            d.parse = st.getColumn("parse").getInt();
+            d.head = st.getColumn("head").getString();
+            d.inflected = st.getColumn("inflected").getString();
+            d.parse = st.getColumn("parse").getString();
             d.lesson = st.getColumn("lesson").getInt();
             alts.push_back(d);
+            printDbEntry(d);
         }
         for (auto &alt : alts)
         {
@@ -151,34 +151,14 @@ void App::markQuiz()
 {
     if (!userInputIsShown)
         return;
-    readContents();
-    clearColors();
-
-    // compare userForms with dbForms
     for (auto &conj : cs)
     {
-        conj->headIsCorrect = false;
-        conj->parseIsCorrect = false;
-        conj->check();
-        conj->show();
-        conj->color();
-        conj->headwordDb.setText(bc::beta2greek(conj->dbForms[0].head));
-        conj->parseDb.setText(conj->dbForms[0].parse);
+        conj->mark();
+        conj->redraw();
     }
-
-    // color fields by correctness
     userInputIsShown = true;
     quizIsMarked = true;
-    // color();
     redraw();
-}
-
-void App::readContents()
-{
-    for (auto conj : cs)
-    {
-        conj->readEntries();
-    }
 }
 
 void App::draw(visage::Canvas &canvas)
@@ -191,8 +171,8 @@ void App::clearColors()
 {
     for (auto conj : cs)
     {
-        conj->headwordUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
-        conj->parseUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
+        blk(&(conj->headwordUser));
+        blk(&(conj->parseUser));
     }
     redraw();
 }
@@ -228,6 +208,16 @@ void App::blk(visage::TextEditor *e)
 {
     e->setBackgroundColorId(visage::TextEditor::TextEditorBackground);
     e->redraw();
+}
+
+void App::printDbEntry(dbEntry entry)
+{
+    std::cout << "dbEntry(" << std::endl;
+    std::cout << "entry.id:\t" << entry.id << std::endl;
+    std::cout << "entry.head:\t" << entry.head << std::endl;
+    std::cout << "entry.inflected:\t" << entry.inflected << std::endl;
+    std::cout << "entry.parse:\t" << entry.parse << std::endl;
+    std::cout << "entry.lesson:\t" << entry.lesson << std::endl;
 }
 
 } // namespace gwr::gkqz

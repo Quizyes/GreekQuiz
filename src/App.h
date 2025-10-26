@@ -24,9 +24,6 @@ class App : public visage::ApplicationWindow
     void newQuiz(int lesson);
     void markQuiz();
     void getAlts();
-    void compare(); // swap btwn user input and db
-    void readContents();
-    // void color();
     void clearColors();
     void red(Label *l);
     void red(visage::TextEditor *e);
@@ -34,6 +31,7 @@ class App : public visage::ApplicationWindow
     void grn(visage::TextEditor *e);
     void blk(Label *l);
     void blk(visage::TextEditor *e);
+    void printDbEntry(dbEntry entry);
     bool userInputIsShown{true};
     bool quizIsMarked{false};
     static const ::visage::theme::ColorId WrongBkgd;

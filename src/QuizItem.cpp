@@ -1,6 +1,7 @@
 #include "QuizItem.h"
 
 using namespace visage::dimension;
+using bc = Betacode;
 
 namespace gwr::gkqz
 {
@@ -10,7 +11,7 @@ VISAGE_THEME_COLOR(RIGHT, 0xff129912);
 
 std::ostream &operator<<(std::ostream &os, const QuizItem &qi)
 {
-    // os << "QuizItem(" << std::endl;
+    os << "QuizItem(" << std::endl;
     // os << "userForm.id: \t" << 7 << std::endl;
     // os << "userForm.head: \t" << qi.userForm.head << std::endl;
     // os << "userForm.inflected: \t" << qi.userForm.inflected << std::endl;
@@ -97,18 +98,53 @@ void QuizItem::draw(visage::Canvas &canvas) { canvas.setColor(0xff000000); }
 
 void QuizItem::check()
 {
+    int idx{0};
     for (auto &dbForm : dbForms)
     {
         if (userForm.head == dbForm.head)
             headIsCorrect = true;
         if (compareParses(userForm.parse, dbForm.parse))
             parseIsCorrect = true;
+        if (parseIsCorrect && headIsCorrect)
+            idxOfCorrectParse = idx;
+        ++idx;
     }
-    // compare userForms with dbForms
-    // color fields
 }
 
-void QuizItem::show() { headwordDb.setText(dbForms[0].head); }
+void QuizItem::show()
+{
+    auto &str = dbForms[idxOfCorrectParse].head;
+    headwordDb.setText(bc::beta2greek(str));
+    parseDb.setText(dbForms[idxOfCorrectParse].parse);
+    redraw();
+}
+
+void QuizItem::mark()
+{
+    readEntries();
+    check();
+    color();
+    show();
+    redraw();
+}
+
+void QuizItem::red(visage::TextEditor *e)
+{
+    e->setBackgroundColorId(WRONG);
+    e->redraw();
+}
+
+void QuizItem::grn(visage::TextEditor *e)
+{
+    e->setBackgroundColorId(RIGHT);
+    e->redraw();
+}
+
+void QuizItem::blk(visage::TextEditor *e)
+{
+    e->setBackgroundColorId(visage::TextEditor::TextEditorBackground);
+    e->redraw();
+}
 
 void QuizItem::readEntries()
 {
@@ -118,14 +154,16 @@ void QuizItem::readEntries()
 
 void QuizItem::color()
 {
-    if (headIsCorrect)
-        headwordUser.setBackgroundColorId(RIGHT);
+    if (headIsCorrect && parseIsCorrect)
+    {
+        grn(&headwordUser);
+        grn(&parseUser);
+    }
     else
-        headwordUser.setBackgroundColorId(WRONG);
-    if (parseIsCorrect)
-        parseUser.setBackgroundColorId(RIGHT);
-    else
-        parseUser.setBackgroundColorId(WRONG);
+    {
+        red(&headwordUser);
+        red(&parseUser);
+    }
     redraw();
 }
 
@@ -133,6 +171,8 @@ void QuizItem::clearAll()
 {
     headwordUser.clear();
     parseUser.clear();
+    headwordDb.setText("");
+    parseDb.setText("");
     headwordUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
     parseUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
     headIsCorrect = false;

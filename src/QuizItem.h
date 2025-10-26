@@ -3,6 +3,7 @@
 #include <visage/app.h>
 #include "embedded/example_fonts.h"
 #include "Label.h"
+#include "Betacode.h"
 #include <visage_widgets/text_editor.h>
 #include <visage_utils/dimension.h>
 #include <visage_graphics/theme.h>
@@ -38,7 +39,12 @@ class QuizItem : public visage::Frame
     void readEntries(); // load input into fields
     void color();       // color entries by correctness
     void show();        // show first correct answer
+    void mark();        // wrap it all up into one
+    void red(visage::TextEditor *e);
+    void grn(visage::TextEditor *e);
+    void blk(visage::TextEditor *e);
     bool headIsCorrect{false}, parseIsCorrect{false};
+    size_t idxOfCorrectParse{0};
     dbEntry userForm;             // full entry data for one question
     std::vector<dbEntry> dbForms; // for each user form, check for (legal) alts, push them in
     visage::TextEditor headwordUser, parseUser; // user entry
