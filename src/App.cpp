@@ -96,6 +96,7 @@ void App::newQuiz(int lessonNum)
         cs[i]->dbForms.push_back(d);
         cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
         cs[i]->headwordDb.setText(d.id);
+        std::cout << *cs[i];
         ++i;
     }
 

@@ -5,7 +5,19 @@ using namespace visage::dimension;
 namespace gwr::gkqz
 {
 
-Conjugation::Conjugation()
+std::ostream &operator<<(std::ostream &os, const QuizItem &qi)
+{
+    os << "QuizItem(" << std::endl;
+    os << "userForm.id: \t" << qi.userForm.id << std::endl;
+    os << "userForm.head: \t" << qi.userForm.head << std::endl;
+    os << "userForm.inflected: \t" << qi.userForm.inflected << std::endl;
+    os << "userForm.parse: \t" << qi.userForm.parse << std::endl;
+    os << ");" << std::endl;
+
+    return os;
+}
+
+QuizItem::QuizItem()
 {
     setFlexLayout(true);
     layout().setFlexRows(false);
@@ -56,27 +68,27 @@ Conjugation::Conjugation()
     parseDb.outline = true;
 }
 
-void Conjugation::draw(visage::Canvas &canvas)
+void QuizItem::draw(visage::Canvas &canvas)
 {
     canvas.setColor(0xff000000);
     // canvas.rectangleBorder(0, 0, width(), height(), 1.0f);
 }
 
-void Conjugation::check()
+void QuizItem::check()
 {
     // compare userForms with dbForms
     // color fields
 }
 
-void Conjugation::readEntries()
+void QuizItem::readEntries()
 {
     userForm.head = headwordUser.text().toUtf8();
     userForm.parse = parseUser.text().toUtf8();
 }
 
-void Conjugation::color() {}
+void QuizItem::color() {}
 
-void Conjugation::clearAll()
+void QuizItem::clearAll()
 {
     for (size_t i = 0; i < 6; ++i)
     {

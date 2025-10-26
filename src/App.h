@@ -50,8 +50,8 @@ class App : public visage::ApplicationWindow
     visage::UiButton newBtn{"New"}, markBtn{"Mark"};
     Label header, body; // , headword;
     visage::TextEditor lesson;
-    Conjugation c1, c2, c3, c4, c5;
-    std::array<Conjugation *, 5> cs;
+    QuizItem c1, c2, c3, c4, c5;
+    std::array<QuizItem *, 5> cs;
     // Betacode b;
 };
 

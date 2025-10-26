@@ -22,13 +22,13 @@ typedef struct dbEntry
     }
 } dbEntry;
 
-class Conjugation : public visage::Frame
+class QuizItem : public visage::Frame
 {
   public:
     std::string name_{""};
     visage::Font fontEn{20, resources::fonts::Lato_Regular_ttf};
     visage::Font fontGk{20, resources::fonts::GFSDidot_Regular_ttf};
-    Conjugation();
+    QuizItem();
     void draw(visage::Canvas &canvas);
     void clearAll();
     void check();       // is head correct, is parse?
@@ -42,6 +42,10 @@ class Conjugation : public visage::Frame
     Label promptDb, headwordDb, parseDb;
 
     visage::Frame prompt, headword, parse;
+
+    friend std::ostream &operator<<(std::ostream &os, const QuizItem &point);
 };
+
+std::ostream &operator<<(std::ostream &os, const QuizItem &qi);
 
 } // namespace gwr::gkqz
