@@ -91,6 +91,7 @@ void App::newQuiz(int lessonNum)
     for (size_t j = 0; j < 5; ++j)
     {
         cs[j]->dbForms.clear();
+        cs[j]->clearAll();
     }
 
     size_t i{0};
@@ -156,8 +157,11 @@ void App::markQuiz()
     // compare userForms with dbForms
     for (auto &conj : cs)
     {
+        conj->headIsCorrect = false;
+        conj->parseIsCorrect = false;
         conj->check();
         conj->show();
+        conj->color();
         conj->headwordDb.setText(bc::beta2greek(conj->dbForms[0].head));
         conj->parseDb.setText(conj->dbForms[0].parse);
     }
@@ -165,7 +169,7 @@ void App::markQuiz()
     // color fields by correctness
     userInputIsShown = true;
     quizIsMarked = true;
-    color();
+    // color();
     redraw();
 }
 
@@ -224,15 +228,6 @@ void App::blk(visage::TextEditor *e)
 {
     e->setBackgroundColorId(visage::TextEditor::TextEditorBackground);
     e->redraw();
-}
-
-void App::color()
-{
-    for (auto conj : cs)
-    {
-        conj->color();
-        conj->redraw();
-    }
 }
 
 } // namespace gwr::gkqz

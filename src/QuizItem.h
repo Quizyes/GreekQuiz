@@ -6,6 +6,7 @@
 #include <visage_widgets/text_editor.h>
 #include <visage_utils/dimension.h>
 #include <visage_graphics/theme.h>
+#include <set>
 
 namespace gwr::gkqz
 {
@@ -30,12 +31,14 @@ class QuizItem : public visage::Frame
     visage::Font fontGk{20, resources::fonts::GFSDidot_Regular_ttf};
     QuizItem();
     void draw(visage::Canvas &canvas);
+    bool compareParses(std::string &userParse, std::string &dbParse);
     void clearAll();
+    std::set<std::string> split(std::string &str, char delimiter);
     void check();       // is head correct, is parse?
     void readEntries(); // load input into fields
     void color();       // color entries by correctness
     void show();        // show first correct answer
-    bool isCorrect{true};
+    bool headIsCorrect{false}, parseIsCorrect{false};
     dbEntry userForm;             // full entry data for one question
     std::vector<dbEntry> dbForms; // for each user form, check for (legal) alts, push them in
     visage::TextEditor headwordUser, parseUser; // user entry

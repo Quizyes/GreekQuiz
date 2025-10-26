@@ -5,6 +5,9 @@ using namespace visage::dimension;
 namespace gwr::gkqz
 {
 
+VISAGE_THEME_COLOR(WRONG, 0xff991212);
+VISAGE_THEME_COLOR(RIGHT, 0xff129912);
+
 std::ostream &operator<<(std::ostream &os, const QuizItem &qi)
 {
     // os << "QuizItem(" << std::endl;
@@ -94,6 +97,13 @@ void QuizItem::draw(visage::Canvas &canvas) { canvas.setColor(0xff000000); }
 
 void QuizItem::check()
 {
+    for (auto &dbForm : dbForms)
+    {
+        if (userForm.head == dbForm.head)
+            headIsCorrect = true;
+        if (compareParses(userForm.parse, dbForm.parse))
+            parseIsCorrect = true;
+    }
     // compare userForms with dbForms
     // color fields
 }
@@ -106,15 +116,59 @@ void QuizItem::readEntries()
     userForm.parse = parseUser.text().toUtf8();
 }
 
-void QuizItem::color() {}
+void QuizItem::color()
+{
+    if (headIsCorrect)
+        headwordUser.setBackgroundColorId(RIGHT);
+    else
+        headwordUser.setBackgroundColorId(WRONG);
+    if (parseIsCorrect)
+        parseUser.setBackgroundColorId(RIGHT);
+    else
+        parseUser.setBackgroundColorId(WRONG);
+    redraw();
+}
 
 void QuizItem::clearAll()
 {
-    for (size_t i = 0; i < 6; ++i)
+    headwordUser.clear();
+    parseUser.clear();
+    headwordUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
+    parseUser.setBackgroundColorId(visage::TextEditor::TextEditorBackground);
+    headIsCorrect = false;
+    parseIsCorrect = false;
+    redraw();
+    // set colors
+}
+
+bool QuizItem::compareParses(std::string &userParse, std::string &dbParse)
+{
+    int matches{0};
+    auto userParts = split(userParse, ' ');
+    auto dbParts = split(dbParse, ' ');
+    for (auto &dbPart : dbParts)
     {
-        headwordUser.clear();
-        parseUser.clear();
+        if (userParts.contains(dbPart))
+            ++matches;
     }
+    return (matches == dbParts.size());
+}
+
+std::set<std::string> QuizItem::split(std::string &str, char delimiter)
+{
+    std::set<std::string> tokens;
+    size_t start = 0;
+    size_t end = str.find(delimiter);
+
+    while (end != std::string::npos)
+    {
+        tokens.insert(str.substr(start, end - start));
+        start = end + 1;
+        end = str.find(delimiter, start);
+    }
+
+    tokens.insert(str.substr(start));
+    return tokens;
 }
 
 } // namespace gwr::gkqz

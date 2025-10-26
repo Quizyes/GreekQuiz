@@ -26,7 +26,7 @@ class App : public visage::ApplicationWindow
     void getAlts();
     void compare(); // swap btwn user input and db
     void readContents();
-    void color();
+    // void color();
     void clearColors();
     void red(Label *l);
     void red(visage::TextEditor *e);
