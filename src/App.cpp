@@ -83,6 +83,10 @@ void App::newQuiz(int lessonNum)
     clearColors();
     lessonNum = std::clamp(lessonNum, 2, 20);
     lesson.setText(lessonNum);
+    // auto st = dbm.getStmt("select distinct id, inflected, head, parse, lesson from morphs where "
+    //                       "head = 'do/ca' order "
+    //                       "by random() limit 5");
+
     auto st =
         dbm.getStmt("select id, inflected, head, parse, lesson from morphs where lesson <= ? order "
                     "by random() limit 5");
@@ -102,6 +106,7 @@ void App::newQuiz(int lessonNum)
         d.head = st.getColumn("head").getString();
         d.inflected = st.getColumn("inflected").getString();
         d.parse = st.getColumn("parse").getString();
+        QLOG("parse: " << d.parse)
         d.lesson = st.getColumn("lesson").getInt();
         cs[i]->dbForms.push_back(d);
         cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
@@ -127,8 +132,9 @@ void App::getAlts()
         root.head = cs[i]->dbForms[0].head;
         root.inflected = cs[i]->dbForms[0].inflected;
         root.parse = cs[i]->dbForms[0].parse;
-        auto st = dbm.getStmt("select * from morphs where inflected = ?");
+        auto st = dbm.getStmt("select * from morphs where inflected = ? and parse != ?");
         st.bind(1, root.inflected);
+        st.bind(2, root.parse);
         while (st.executeStep())
         {
             dbEntry d;
@@ -136,6 +142,7 @@ void App::getAlts()
             d.head = st.getColumn("head").getString();
             d.inflected = st.getColumn("inflected").getString();
             d.parse = st.getColumn("parse").getString();
+            QLOG("alt parse:" << d.parse)
             d.lesson = st.getColumn("lesson").getInt();
             alts.push_back(d);
             // printDbEntry(d);
@@ -171,54 +178,9 @@ void App::clearColors()
 {
     for (auto conj : cs)
     {
-        blk(&(conj->headwordUser));
-        blk(&(conj->parseUser));
+        conj->clearAll();
     }
     redraw();
-}
-
-void App::red(Label *l)
-{
-    l->setColor(visage::Color(0xffbb3232));
-    l->redraw();
-}
-void App::red(visage::TextEditor *e)
-{
-    e->setBackgroundColorId(WRONG);
-    e->redraw();
-}
-
-void App::grn(Label *l)
-{
-    l->setColor(visage::Color(0xff32bb32));
-    l->redraw();
-}
-void App::grn(visage::TextEditor *e)
-{
-    e->setBackgroundColorId(RIGHT);
-    e->redraw();
-}
-
-void App::blk(Label *l)
-{
-    l->setColor(visage::Color(0xff000000));
-    l->redraw();
-}
-void App::blk(visage::TextEditor *e)
-{
-    e->setBackgroundColorId(visage::TextEditor::TextEditorBackground);
-    e->redraw();
-}
-
-void App::printDbEntry(dbEntry entry)
-{
-    std::cout << "dbEntry(" << std::endl;
-    std::cout << "entry.id:\t" << entry.id << std::endl;
-    std::cout << "entry.head:\t" << entry.head << std::endl;
-    std::cout << "entry.inflected:\t" << entry.inflected << std::endl;
-    std::cout << "entry.parse:\t" << entry.parse << std::endl;
-    std::cout << "entry.lesson:\t" << entry.lesson << std::endl;
-    std::cout << ")" << std::endl;
 }
 
 } // namespace gwr::gkqz

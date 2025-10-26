@@ -1,4 +1,6 @@
 #include "QuizItem.h"
+#include <iostream>
+#define QLOG(msg) std::cerr << "DEBUG: " << msg << std::endl;
 
 using namespace visage::dimension;
 using bc = Betacode;
@@ -99,23 +101,34 @@ void QuizItem::draw(visage::Canvas &canvas) { canvas.setColor(0xff000000); }
 void QuizItem::check()
 {
     int idx{0};
+    headIsCorrect = false;
+    parseIsCorrect = false;
     for (auto &dbForm : dbForms)
     {
+        bool headC{false}, parseC{false};
         if (userForm.head == dbForm.head)
-            headIsCorrect = true;
+            headC = true;
         if (compareParses(userForm.parse, dbForm.parse))
-            parseIsCorrect = true;
-        if (parseIsCorrect && headIsCorrect)
+            parseC = true;
+        if (parseC && headC)
+        {
             idxOfCorrectParse = idx;
+            headIsCorrect = true;
+            parseIsCorrect = true;
+            return;
+        }
         ++idx;
     }
 }
 
 void QuizItem::show()
 {
-    auto &str = dbForms[idxOfCorrectParse].head;
+    int idx{0};
+    if (headIsCorrect && parseIsCorrect)
+        idx = idxOfCorrectParse;
+    auto &str = dbForms[idx].head;
     headwordDb.setText(bc::beta2greek(str));
-    parseDb.setText(dbForms[idxOfCorrectParse].parse);
+    parseDb.setText(dbForms[idx].parse);
     redraw();
 }
 
@@ -184,14 +197,25 @@ void QuizItem::clearAll()
 bool QuizItem::compareParses(std::string &userParse, std::string &dbParse)
 {
     int matches{0};
+    QLOG("got user: " << userParse)
+    QLOG("got db  : " << dbParse)
     auto userParts = split(userParse, ' ');
     auto dbParts = split(dbParse, ' ');
+    // for (auto &userPart : userParts)
+    {
+        // QLOG("part:   " << userPart)
+    }
     for (auto &dbPart : dbParts)
     {
+        // QLOG("dbPart: " << dbPart)
         if (userParts.contains(dbPart))
             ++matches;
     }
-    return (matches == dbParts.size());
+    QLOG("matches: " << matches)
+    QLOG("sizeof:  " << dbParts.size())
+    auto m = (matches == dbParts.size());
+    QLOG("bool:    " << m)
+    return m;
 }
 
 std::set<std::string> QuizItem::split(std::string &str, char delimiter)

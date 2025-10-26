@@ -25,23 +25,12 @@ class App : public visage::ApplicationWindow
     void markQuiz();
     void getAlts();
     void clearColors();
-    void red(Label *l);
-    void red(visage::TextEditor *e);
-    void grn(Label *l);
-    void grn(visage::TextEditor *e);
-    void blk(Label *l);
-    void blk(visage::TextEditor *e);
-    void printDbEntry(dbEntry entry);
+    // void printDbEntry(dbEntry entry);
     bool userInputIsShown{true};
     bool quizIsMarked{false};
     static const ::visage::theme::ColorId WrongBkgd;
     static const ::visage::theme::ColorId RightBkgd;
-    // remake in conj
-    // bool matches(std::string &userAnswer, std::string &dbAnswer);
 
-    // std::string replaceAccentedCharacters(std::string &input);
-    // std::string replaceUnaccentedCharacters(std::string &input);
-    SQLite::Statement getRightStatment(std::string &inverb);
     DbManager dbm;
     visage::Font font{20, resources::fonts::Lato_Regular_ttf};
     void draw(visage::Canvas &canvas) override;
