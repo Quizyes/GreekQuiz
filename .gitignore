@@ -1,6 +1,6 @@
 .vs
 .vscode
-libs/
+libs/SQLiteCPP
 out/
 build/
 web-build/
