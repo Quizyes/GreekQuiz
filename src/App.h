@@ -10,7 +10,7 @@
 #include <visage_utils/dimension.h>
 #include "DbManager.h"
 #include "Label.h"
-#include "Conj.h"
+#include "QuizItem.h"
 #include "Betacode.h"
 
 namespace gwr::gkqz

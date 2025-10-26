@@ -1,4 +1,3 @@
--- figure out what's up with parseUser
 -- subclass TextEditor for Greek input
 -- implement check() and color() on QuizItems
 -- implement markQuiz() 

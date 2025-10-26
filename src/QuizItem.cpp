@@ -1,4 +1,4 @@
-#include "Conj.h"
+#include "QuizItem.h"
 
 using namespace visage::dimension;
 
@@ -58,17 +58,17 @@ QuizItem::QuizItem()
 
     promptDb.setFont(fontGk.withSize(30.f));
     promptDb.layout().setDimensions(100_vw, 100_vh);
-    promptDb.layout().setMarginTop(2.f);
+    promptDb.layout().setMargin(1_vh);
 
     headwordDb.setFont(fontGk.withSize(30.f));
     headwordDb.layout().setDimensions(100_vw, 100_vh);
-    headwordDb.layout().setMarginTop(2.f);
+    headwordDb.layout().setMargin(1_vh);
 
     for (auto &fr : {&headwordUser, &parseUser})
     {
         fr->setFont(fontGk.withSize(20.f));
         fr->setJustification(visage::Font::Justification::kCenter);
-        fr->layout().setDimensions(100_vw, 50_vh);
+        fr->layout().setDimensions(100_vw, 49_vh);
         fr->setTextFieldEntry();
     }
     headwordUser.setDefaultText("headword");
@@ -77,7 +77,7 @@ QuizItem::QuizItem()
     headwordDb.layout().setDimensions(100_vw, 50_vh);
     parseDb.setFont(fontEn.withSize(30.f));
     parseDb.layout().setDimensions(100_vw, 50_vh);
-    parseDb.layout().setMarginTop(2.f);
+    parseDb.layout().setMargin(1_vh);
 
     promptDb.outline = true;
     headwordDb.outline = true;

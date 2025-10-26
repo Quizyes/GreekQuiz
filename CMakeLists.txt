@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/App.cpp
   src/DbManager.cpp
-  src/Conj.cpp
+  src/QuizItem.cpp
   src/Betacode.cpp
   libs/unibetacode/ub_utf8.c
   libs/unibetacode/ub_greek2beta.c
@@ -56,7 +56,7 @@ endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-include_directories(PUBLIC libs/visage libs/SQLiteCpp libs/unibetacode src)
+include_directories(libs/visage libs/SQLiteCpp libs/unibetacode src)
 
 if (EMSCRIPTEN)
     MESSAGE(STATUS "Building for WebAssembly")    
