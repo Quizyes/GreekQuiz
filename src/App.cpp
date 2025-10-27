@@ -106,7 +106,6 @@ void App::newQuiz(int lessonNum)
         d.head = st.getColumn("head").getString();
         d.inflected = st.getColumn("inflected").getString();
         d.parse = st.getColumn("parse").getString();
-        QLOG("parse: " << d.parse)
         d.lesson = st.getColumn("lesson").getInt();
         cs[i]->dbForms.push_back(d);
         cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
@@ -114,9 +113,6 @@ void App::newQuiz(int lessonNum)
     }
 
     getAlts();
-
-    // std::cout << *(cs[i]);
-
     userInputIsShown = true;
     quizIsMarked = false;
     redraw();
@@ -142,7 +138,6 @@ void App::getAlts()
             d.head = st.getColumn("head").getString();
             d.inflected = st.getColumn("inflected").getString();
             d.parse = st.getColumn("parse").getString();
-            QLOG("alt parse:" << d.parse)
             d.lesson = st.getColumn("lesson").getInt();
             alts.push_back(d);
             // printDbEntry(d);
