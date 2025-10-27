@@ -4,3 +4,5 @@
 -- subclass TextEditor for Greek input
 -- [prep]:  make a dummy class w/lots of logging
 --          to trace code paths, etc.
+
+-- don't need to ship Lato...
