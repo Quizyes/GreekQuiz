@@ -6,3 +6,6 @@
 --          to trace code paths, etc.
 
 -- don't need to ship Lato...
+
+-- fix db parse entries via nextgen.py
+-- gender/case/number

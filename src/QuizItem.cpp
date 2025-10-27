@@ -81,8 +81,8 @@ QuizItem::QuizItem()
     parseUser.setDefaultText("parse");
 
     headwordUser.onTextChange() += [&]() {
-        auto text = headwordUser.text().toUtf8();
-        headwordDb.setText(bc::beta2greek(text));
+        // mirror betacode with Greek
+        headwordDb.setText(bc::beta2greek(headwordUser.text().toUtf8()));
     };
 
     headwordDb.layout().setDimensions(100_vw, 50_vh);

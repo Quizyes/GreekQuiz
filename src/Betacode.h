@@ -13,6 +13,6 @@ struct Betacode
 {
   public:
     std::string beta{"lo/gos"};
-    static std::string beta2greek(std::string &utf8);
-    static std::string greek2beta(std::string &greek);
+    static std::string beta2greek(const std::string &utf8);
+    static std::string greek2beta(const std::string &greek);
 };
