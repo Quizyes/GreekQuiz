@@ -80,6 +80,11 @@ QuizItem::QuizItem()
     headwordUser.setDefaultText("headword");
     parseUser.setDefaultText("parse");
 
+    headwordUser.onTextChange() += [&]() {
+        auto text = headwordUser.text().toUtf8();
+        headwordDb.setText(bc::beta2greek(text));
+    };
+
     headwordDb.layout().setDimensions(100_vw, 50_vh);
     parseDb.setFont(fontEn.withSize(30.f));
     parseDb.layout().setDimensions(100_vw, 50_vh);
@@ -197,8 +202,6 @@ void QuizItem::clearAll()
 bool QuizItem::compareParses(std::string &userParse, std::string &dbParse)
 {
     int matches{0};
-    QLOG("got user: " << userParse)
-    QLOG("got db  : " << dbParse)
     auto userParts = split(userParse, ' ');
     auto dbParts = split(dbParse, ' ');
     // for (auto &userPart : userParts)
@@ -211,10 +214,7 @@ bool QuizItem::compareParses(std::string &userParse, std::string &dbParse)
         if (userParts.contains(dbPart))
             ++matches;
     }
-    QLOG("matches: " << matches)
-    QLOG("sizeof:  " << dbParts.size())
     auto m = (matches == dbParts.size());
-    QLOG("bool:    " << m)
     return m;
 }
 
