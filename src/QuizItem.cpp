@@ -204,13 +204,8 @@ bool QuizItem::compareParses(std::string &userParse, std::string &dbParse)
     int matches{0};
     auto userParts = split(userParse, ' ');
     auto dbParts = split(dbParse, ' ');
-    // for (auto &userPart : userParts)
-    {
-        // QLOG("part:   " << userPart)
-    }
     for (auto &dbPart : dbParts)
     {
-        // QLOG("dbPart: " << dbPart)
         if (userParts.contains(dbPart))
             ++matches;
     }

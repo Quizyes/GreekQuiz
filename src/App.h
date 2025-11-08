@@ -5,6 +5,7 @@
 #include <visage_app/application_window.h>
 #include <visage_file_embed/embedded_file.h>
 #include "embedded/example_fonts.h"
+#include "embedded/fonts.h"
 #include <visage_widgets/button.h>
 #include <visage_widgets/text_editor.h>
 #include <visage_utils/dimension.h>
@@ -12,6 +13,7 @@
 #include "Label.h"
 #include "QuizItem.h"
 #include "Betacode.h"
+#define MAX_ROWS 8
 
 namespace gwr::gkqz
 {
@@ -20,26 +22,26 @@ class App : public visage::ApplicationWindow
 {
   public:
     App();
+    ~App();
     void newQuiz();
     void newQuiz(int lesson);
-    void markQuiz();
     void getAlts();
+    void markQuiz();
     void clearColors();
-    // void printDbEntry(dbEntry entry);
     bool userInputIsShown{true};
     bool quizIsMarked{false};
     static const ::visage::theme::ColorId WrongBkgd;
     static const ::visage::theme::ColorId RightBkgd;
 
     DbManager dbm;
-    visage::Font font{20, resources::fonts::Lato_Regular_ttf};
+    visage::Font font{50, visage::fonts::Lato_Regular_ttf};
     void draw(visage::Canvas &canvas) override;
     std::vector<std::string> splitForms(std::string entry);
     visage::UiButton newBtn{"New"}, markBtn{"Mark"};
     Label header, body; // , headword;
     visage::TextEditor lesson;
-    QuizItem c1, c2, c3, c4, c5;
-    std::array<QuizItem *, 5> cs;
+    // QuizItem c1, c2, c3, c4, c5;
+    std::array<QuizItem *, MAX_ROWS> cs;
     // Betacode b;
 };
 

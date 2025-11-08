@@ -11,6 +11,14 @@ namespace gwr::gkqz
 VISAGE_THEME_COLOR(WRONG, 0xff991212);
 VISAGE_THEME_COLOR(RIGHT, 0xff129912);
 
+App::~App()
+{
+    for (int i = 0; i < MAX_ROWS; ++i)
+    {
+        delete cs[i];
+    }
+}
+
 App::App() : dbm(":memory:")
 {
     setFlexLayout(true);
@@ -59,21 +67,29 @@ App::App() : dbm(":memory:")
     body.layout().setMargin(5.f);
     body.outline = false;
 
-    body.addChild(c1, true);
-    body.addChild(c2, true);
-    body.addChild(c3, true);
-    body.addChild(c4, true);
-    body.addChild(c5, true);
-    c1.layout().setDimensions(99_vw, 18_vh);
-    c2.layout().setDimensions(99_vw, 18_vh);
-    c3.layout().setDimensions(99_vw, 18_vh);
-    c4.layout().setDimensions(99_vw, 18_vh);
-    c5.layout().setDimensions(99_vw, 18_vh);
-    cs[0] = &c1;
-    cs[1] = &c2;
-    cs[2] = &c3;
-    cs[3] = &c4;
-    cs[4] = &c5;
+    for (int i = 0; i < MAX_ROWS; ++i)
+    {
+        auto qi = new QuizItem();
+        cs[i] = qi;
+        body.addChild(qi);
+        qi->layout().setDimensions(99_vw, 11_vh);
+    }
+
+    // body.addChild(c1, true);
+    // body.addChild(c2, true);
+    // body.addChild(c3, true);
+    // body.addChild(c4, true);
+    // body.addChild(c5, true);
+    // c1.layout().setDimensions(99_vw, 18_vh);
+    // c2.layout().setDimensions(99_vw, 18_vh);
+    // c3.layout().setDimensions(99_vw, 18_vh);
+    // c4.layout().setDimensions(99_vw, 18_vh);
+    // c5.layout().setDimensions(99_vw, 18_vh);
+    // cs[0] = &c1;
+    // cs[1] = &c2;
+    // cs[2] = &c3;
+    // cs[3] = &c4;
+    // cs[4] = &c5;
 }
 
 void App::newQuiz() { newQuiz(2); }
@@ -83,16 +99,14 @@ void App::newQuiz(int lessonNum)
     clearColors();
     lessonNum = std::clamp(lessonNum, 2, 20);
     lesson.setText(lessonNum);
-    // auto st = dbm.getStmt("select distinct id, inflected, head, parse, lesson from morphs where "
-    //                       "head = 'do/ca' order "
-    //                       "by random() limit 5");
 
     auto st =
         dbm.getStmt("select id, inflected, head, parse, lesson from morphs where lesson <= ? order "
-                    "by random() limit 5");
+                    "by random() limit ?");
     st.bind(1, lessonNum);
+    st.bind(2, MAX_ROWS);
 
-    for (size_t j = 0; j < 5; ++j)
+    for (size_t j = 0; j < MAX_ROWS; ++j)
     {
         cs[j]->dbForms.clear();
         cs[j]->clearAll();
@@ -120,7 +134,7 @@ void App::newQuiz(int lessonNum)
 
 void App::getAlts()
 {
-    for (size_t i = 0; i < 5; ++i)
+    for (size_t i = 0; i < MAX_ROWS; ++i)
     {
         std::vector<dbEntry> alts;
         dbEntry root;
@@ -140,7 +154,6 @@ void App::getAlts()
             d.parse = st.getColumn("parse").getString();
             d.lesson = st.getColumn("lesson").getInt();
             alts.push_back(d);
-            // printDbEntry(d);
         }
         for (auto &alt : alts)
         {

@@ -21,6 +21,8 @@ typedef struct dbEntry
         head.clear();
         inflected.clear();
         parse.clear();
+        id = 0;
+        lesson = 0;
     }
 } dbEntry;
 
@@ -28,7 +30,7 @@ class QuizItem : public visage::Frame
 {
   public:
     std::string name_{""};
-    visage::Font fontEn{20, resources::fonts::Lato_Regular_ttf};
+    visage::Font fontEn{20, visage::fonts::Lato_Regular_ttf};
     visage::Font fontGk{20, resources::fonts::GFSDidot_Regular_ttf};
     QuizItem();
     void draw(visage::Canvas &canvas);
@@ -47,11 +49,10 @@ class QuizItem : public visage::Frame
     size_t idxOfCorrectParse{0};
     dbEntry userForm;             // full entry data for one question
     std::vector<dbEntry> dbForms; // for each user form, check for (legal) alts, push them in
-    visage::TextEditor headwordUser, parseUser; // user entry
-
-    Label promptDb, headwordDb, parseDb;
 
     visage::Frame prompt, headword, parse;
+    Label promptDb, headwordDb, parseDb;
+    visage::TextEditor headwordUser, parseUser; // user entry
 
     friend std::ostream &operator<<(std::ostream &os, const QuizItem &point);
 };

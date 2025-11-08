@@ -6,7 +6,7 @@
 int main()
 {
     gwr::gkqz::App app;
-    app.show(900, 675);
+    app.show(1200, 900);
     app.runEventLoop();
     return 0;
 }
