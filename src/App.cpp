@@ -53,7 +53,7 @@ App::App() : dbm(":memory:")
     lessonLabel.outline = false;
     lessonLabel.just = visage::Font::Justification::kCenter;
 
-    lesson.setFont(font.withSize(20.f));
+    lesson.setFont(font.withSize(30.f));
     lesson.onEnterKey() = [this]() {
         auto head = lesson.text().toInt();
         newQuiz(head);

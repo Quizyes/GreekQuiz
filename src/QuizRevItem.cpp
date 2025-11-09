@@ -56,7 +56,7 @@ QuizRevItem::QuizRevItem()
         inflectedDb.setText(bc::beta2greek(inflectedEditor.text().toUtf8()));
     };
 
-    headwordDb.setFont(fontGk.withSize(25.f));
+    headwordDb.setFont(fontGk.withSize(35.f));
     headwordDb.layout().setDimensions(100_vw, 100_vh);
     headwordDb.layout().setMargin(1_vh);
     headwordDb.just = visage::Font::Justification::kCenter;

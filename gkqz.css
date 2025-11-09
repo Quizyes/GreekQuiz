@@ -1,0 +1,50 @@
+body { 
+    background-color: darkslategray;
+    text-align: center;
+    color: bisque;
+}
+
+h1 {
+    font: 3em sans-serif;
+}
+
+div {
+    font: 2em sans-serif;
+}
+
+div > a {
+    font: 1em sans-serif;
+    color:bisque;
+}
+
+div {
+    text-align: justify;
+    padding-left: 8%;
+    padding-right: 8%;
+    margin-bottom: 1.5em;
+}
+
+div.fn {
+    font: 1.3em sans-serif;
+    text-indent: 0em;
+    padding-left: 10%;
+}
+
+div#links {
+    font: 1em sans-serif;
+}
+
+div.ch {
+    font: 2em sans-serif;
+}
+
+div.list {
+    font: 1em sans-serif;
+    text-indent: 1em;
+}
+
+td {
+    margin: 0px;
+    padding: 10px;
+    border: 2px solid black;
+}
