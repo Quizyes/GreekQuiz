@@ -27,6 +27,8 @@ add_subdirectory(libs/SQLiteCPP)
 # resources (need a polytonic Greek font)
 file(GLOB_RECURSE FONT_TTF_FILES fonts/*.ttf)
 add_embedded_resources(EmbeddedFontResources "example_fonts.h" "resources::fonts" "${FONT_TTF_FILES}")
+file(GLOB_RECURSE SQL_FILES dbs/*.db)
+add_embedded_resources(EmbeddedDbResources "mydbs.h" "resources::dbs" "${SQL_FILES}")
 
 
 add_executable(${PROJECT_NAME} 
@@ -76,7 +78,7 @@ if (EMSCRIPTEN)
   set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".html"
     OUTPUT_NAME "index"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builds/${EXAMPLE}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/site"
   )
 endif()
 
@@ -84,6 +86,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   visage
   VisageEmbeddedFonts
   EmbeddedFontResources
+  EmbeddedDbResources
   SQLiteCpp
   sqlite3 # ${SQL} 
 )

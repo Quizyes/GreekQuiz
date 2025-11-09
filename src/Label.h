@@ -11,9 +11,10 @@ class Label : public visage::Frame
     visage::String text_;
     bool outline{true};
     std::vector<visage::String> tokens_;
+    visage::Font::Justification just{visage::Font::Justification::kLeft};
     visage::Font fontEn{25, visage::fonts::Lato_Regular_ttf};
     visage::Color color_{visage::Color(0xff000000)};
-    bool centered{true};
+    bool centered{false};
     void setColor(const visage::Color &color)
     {
         color_ = color;
@@ -56,10 +57,6 @@ class Label : public visage::Frame
             return;
         }
         canvas.setColor(color_);
-        if (centered)
-            canvas.text(text_, fontEn, visage::Font::Justification::kCenter, 0, 0, width(),
-                        height());
-        else
-            canvas.text(text_, fontEn, visage::Font::Justification::kTop, 0, 0, width(), height());
+        canvas.text(text_, fontEn, just, 5, 0, width(), height());
     }
 };

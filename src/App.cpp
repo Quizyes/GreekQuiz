@@ -34,13 +34,29 @@ App::App() : dbm(":memory:")
 
     header.outline = false;
 
-    header.addChild(newBtn, true);
-    header.addChild(lesson, true);
-    header.addChild(markBtn, true);
+    header.addChild(lessonLabel);
+    header.addChild(lesson);
+    header.addChild(newBtn);
+    header.addChild(markBtn);
+    header.addChild(helpBtn);
 
-    newBtn.layout().setDimensions(33_vw, 100_vh);
-    lesson.layout().setDimensions(32_vw, 100_vh);
-    markBtn.layout().setDimensions(33_vw, 100_vh);
+    lessonLabel.layout().setDimensions(8_vw, 100_vh);
+    lesson.layout().setDimensions(5_vw, 100_vh);
+    newBtn.layout().setDimensions(11_vw, 100_vh);
+    markBtn.layout().setDimensions(11_vw, 100_vh);
+    helpBtn.layout().setDimensions(5_vw, 100_vh);
+
+    lessonLabel.setText("Lesson #");
+    lessonLabel.setFont(font.withSize(20.f));
+    lessonLabel.outline = false;
+    lessonLabel.just = visage::Font::Justification::kCenter;
+
+    lesson.setFont(font.withSize(20.f));
+    lesson.onEnterKey() = [this]() {
+        auto head = lesson.text().toInt();
+        newQuiz(head);
+    };
+    lesson.setText("2");
 
     newBtn.setFont(font.withSize(25.f));
     newBtn.onMouseDown() = [&](const visage::MouseEvent &e) {
@@ -54,11 +70,13 @@ App::App() : dbm(":memory:")
     markBtn.setFont(font.withSize(25.f));
     markBtn.onMouseDown() = [&](const visage::MouseEvent &e) { markQuiz(); };
 
-    lesson.setFont(font.withSize(25.f));
-    lesson.onEnterKey() = [this]() {
-        auto head = lesson.text().toInt();
-        newQuiz(head);
+    helpBtn.setFont(font.withSize(25.f));
+    helpBtn.onMouseDown() = [&](const visage::MouseEvent &e) {
+        // clang-format off
+        EM_ASM(window.open("help.html", "myPopup", "width=1200,height=900,resizable=yes,scrollbars=yes,location=no,menubar=no,toolbar=no,status=no"));
+        // clang-format on
     };
+
     // ============================
 
     body.setFlexLayout(true);
@@ -74,22 +92,6 @@ App::App() : dbm(":memory:")
         body.addChild(qi);
         qi->layout().setDimensions(99_vw, 11_vh);
     }
-
-    // body.addChild(c1, true);
-    // body.addChild(c2, true);
-    // body.addChild(c3, true);
-    // body.addChild(c4, true);
-    // body.addChild(c5, true);
-    // c1.layout().setDimensions(99_vw, 18_vh);
-    // c2.layout().setDimensions(99_vw, 18_vh);
-    // c3.layout().setDimensions(99_vw, 18_vh);
-    // c4.layout().setDimensions(99_vw, 18_vh);
-    // c5.layout().setDimensions(99_vw, 18_vh);
-    // cs[0] = &c1;
-    // cs[1] = &c2;
-    // cs[2] = &c3;
-    // cs[3] = &c4;
-    // cs[4] = &c5;
 }
 
 void App::newQuiz() { newQuiz(2); }
@@ -100,9 +102,9 @@ void App::newQuiz(int lessonNum)
     lessonNum = std::clamp(lessonNum, 2, 20);
     lesson.setText(lessonNum);
 
-    auto st =
-        dbm.getStmt("select id, inflected, head, parse, lesson from morphs where lesson <= ? order "
-                    "by random() limit ?");
+    auto st = dbm.getStmt(
+        "select id, inflected, head, parse, lesson from newmorphs where lesson <= ? order "
+        "by random() limit ?");
     st.bind(1, lessonNum);
     st.bind(2, MAX_ROWS);
 
@@ -142,7 +144,7 @@ void App::getAlts()
         root.head = cs[i]->dbForms[0].head;
         root.inflected = cs[i]->dbForms[0].inflected;
         root.parse = cs[i]->dbForms[0].parse;
-        auto st = dbm.getStmt("select * from morphs where inflected = ? and parse != ?");
+        auto st = dbm.getStmt("select * from newmorphs where inflected = ? and parse != ?");
         st.bind(1, root.inflected);
         st.bind(2, root.parse);
         while (st.executeStep())

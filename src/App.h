@@ -9,6 +9,7 @@
 #include <visage_widgets/button.h>
 #include <visage_widgets/text_editor.h>
 #include <visage_utils/dimension.h>
+#include <emscripten.h>
 #include "DbManager.h"
 #include "Label.h"
 #include "QuizItem.h"
@@ -37,12 +38,10 @@ class App : public visage::ApplicationWindow
     visage::Font font{50, visage::fonts::Lato_Regular_ttf};
     void draw(visage::Canvas &canvas) override;
     std::vector<std::string> splitForms(std::string entry);
-    visage::UiButton newBtn{"New"}, markBtn{"Mark"};
-    Label header, body; // , headword;
+    visage::UiButton newBtn{"New"}, markBtn{"Mark"}, helpBtn{"?"};
+    Label lessonLabel, header, body; // , headword;
     visage::TextEditor lesson;
-    // QuizItem c1, c2, c3, c4, c5;
     std::array<QuizItem *, MAX_ROWS> cs;
-    // Betacode b;
 };
 
 } // namespace gwr::gkqz

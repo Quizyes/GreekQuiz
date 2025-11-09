@@ -73,7 +73,6 @@ QuizItem::QuizItem()
     for (auto &fr : {&headwordUser, &parseUser})
     {
         fr->setFont(fontGk.withSize(20.f));
-        fr->setJustification(visage::Font::Justification::kCenter);
         fr->layout().setDimensions(100_vw, 49_vh);
         fr->setTextFieldEntry();
     }
@@ -112,9 +111,15 @@ void QuizItem::check()
     {
         bool headC{false}, parseC{false};
         if (userForm.head == dbForm.head)
+        {
             headC = true;
+            headIsCorrect = true;
+        }
         if (compareParses(userForm.parse, dbForm.parse))
+        {
             parseC = true;
+            parseIsCorrect = true;
+        }
         if (parseC && headC)
         {
             idxOfCorrectParse = idx;
@@ -129,7 +134,7 @@ void QuizItem::check()
 void QuizItem::show()
 {
     int idx{0};
-    if (headIsCorrect && parseIsCorrect)
+    if (parseIsCorrect)
         idx = idxOfCorrectParse;
     auto &str = dbForms[idx].head;
     headwordDb.setText(bc::beta2greek(str));
@@ -172,16 +177,14 @@ void QuizItem::readEntries()
 
 void QuizItem::color()
 {
-    if (headIsCorrect && parseIsCorrect)
-    {
+    if (headIsCorrect)
         grn(&headwordUser);
-        grn(&parseUser);
-    }
     else
-    {
         red(&headwordUser);
+    if (parseIsCorrect)
+        grn(&parseUser);
+    else
         red(&parseUser);
-    }
     redraw();
 }
 
