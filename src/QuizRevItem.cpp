@@ -93,7 +93,11 @@ void QuizRevItem::check()
         inflectedIsCorrect = false;
 }
 
-void QuizRevItem::show() { inflectedDb.setText(bc::beta2greek(dbForm.inflected)); }
+void QuizRevItem::show()
+{
+    inflectedEditor.setText(bc::beta2greek(inflectedEditor.text().toUtf8()));
+    inflectedDb.setText(bc::beta2greek(dbForm.inflected));
+}
 
 void QuizRevItem::mark()
 {
