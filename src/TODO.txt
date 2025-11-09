@@ -1,7 +1,0 @@
-
--- fix db parse entries in nextgen.py
--- gender/case/number
-    -- tl.insert(0, number)
-    -- tl.insert(0, case)
-    -- tl.insert(0, gender)
-
