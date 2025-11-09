@@ -13,6 +13,7 @@
 #include "DbManager.h"
 #include "Label.h"
 #include "QuizItem.h"
+#include "QuizRevItem.h"
 #include "Betacode.h"
 #define MAX_ROWS 8
 
@@ -24,24 +25,21 @@ class App : public visage::ApplicationWindow
   public:
     App();
     ~App();
+    void draw(visage::Canvas &canvas) override;
     void newQuiz();
     void newQuiz(int lesson);
     void getAlts();
     void markQuiz();
     void clearColors();
-    bool userInputIsShown{true};
-    bool quizIsMarked{false};
-    static const ::visage::theme::ColorId WrongBkgd;
-    static const ::visage::theme::ColorId RightBkgd;
-
+    void switchQs();
+    bool userInputIsShown{true}, quizIsMarked{false}, isReverse{false};
     DbManager dbm;
     visage::Font font{50, visage::fonts::Lato_Regular_ttf};
-    void draw(visage::Canvas &canvas) override;
-    std::vector<std::string> splitForms(std::string entry);
-    visage::UiButton newBtn{"New"}, markBtn{"Mark"}, helpBtn{"?"};
-    Label lessonLabel, header, body; // , headword;
+    visage::UiButton newBtn{"New"}, markBtn{"Mark"}, helpBtn{"?"}, reverseBtn{"Reverse"};
+    Label lessonLabel, header, body;
     visage::TextEditor lesson;
-    std::array<QuizItem *, MAX_ROWS> cs;
+    std::array<QuizItem *, MAX_ROWS> qis;
+    std::array<gwr::gkrv::QuizRevItem *, MAX_ROWS> qrs;
 };
 
 } // namespace gwr::gkqz

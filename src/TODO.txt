@@ -1,11 +1,7 @@
--- implement check() and color() on QuizItems
--- implement markQuiz() 
 
--- subclass TextEditor for Greek input
--- [prep]:  make a dummy class w/lots of logging
---          to trace code paths, etc.
-
--- don't need to ship Lato...
-
--- fix db parse entries via nextgen.py
+-- fix db parse entries in nextgen.py
 -- gender/case/number
+    -- tl.insert(0, number)
+    -- tl.insert(0, case)
+    -- tl.insert(0, gender)
+

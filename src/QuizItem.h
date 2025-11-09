@@ -8,23 +8,10 @@
 #include <visage_utils/dimension.h>
 #include <visage_graphics/theme.h>
 #include <set>
+#include "Utils.h"
 
 namespace gwr::gkqz
 {
-
-typedef struct dbEntry
-{
-    int id{0}, lesson{0};
-    std::string head{""}, inflected{""}, parse{""};
-    void clear()
-    {
-        head.clear();
-        inflected.clear();
-        parse.clear();
-        id = 0;
-        lesson = 0;
-    }
-} dbEntry;
 
 class QuizItem : public visage::Frame
 {
@@ -53,10 +40,6 @@ class QuizItem : public visage::Frame
     visage::Frame prompt, headword, parse;
     Label promptDb, headwordDb, parseDb;
     visage::TextEditor headwordUser, parseUser; // user entry
-
-    friend std::ostream &operator<<(std::ostream &os, const QuizItem &point);
 };
-
-std::ostream &operator<<(std::ostream &os, const QuizItem &qi);
 
 } // namespace gwr::gkqz

@@ -15,7 +15,7 @@ App::~App()
 {
     for (int i = 0; i < MAX_ROWS; ++i)
     {
-        delete cs[i];
+        delete qis[i];
     }
 }
 
@@ -39,12 +39,14 @@ App::App() : dbm(":memory:")
     header.addChild(newBtn);
     header.addChild(markBtn);
     header.addChild(helpBtn);
+    header.addChild(reverseBtn);
 
     lessonLabel.layout().setDimensions(8_vw, 100_vh);
     lesson.layout().setDimensions(5_vw, 100_vh);
     newBtn.layout().setDimensions(11_vw, 100_vh);
     markBtn.layout().setDimensions(11_vw, 100_vh);
     helpBtn.layout().setDimensions(5_vw, 100_vh);
+    reverseBtn.layout().setDimensions(9_vw, 100_vh);
 
     lessonLabel.setText("Lesson #");
     lessonLabel.setFont(font.withSize(20.f));
@@ -77,6 +79,9 @@ App::App() : dbm(":memory:")
         // clang-format on
     };
 
+    reverseBtn.setFont(font.withSize(25.f));
+    reverseBtn.onMouseDown() = [&](const visage::MouseEvent &e) { switchQs(); };
+
     // ============================
 
     body.setFlexLayout(true);
@@ -88,9 +93,12 @@ App::App() : dbm(":memory:")
     for (int i = 0; i < MAX_ROWS; ++i)
     {
         auto qi = new QuizItem();
-        cs[i] = qi;
-        body.addChild(qi);
+        auto qr = new gwr::gkrv::QuizRevItem();
         qi->layout().setDimensions(99_vw, 11_vh);
+        qr->layout().setDimensions(99_vw, 11_vh);
+        qis[i] = qi;
+        qrs[i] = qr;
+        body.addChild(qi);
     }
 }
 
@@ -102,33 +110,67 @@ void App::newQuiz(int lessonNum)
     lessonNum = std::clamp(lessonNum, 2, 20);
     lesson.setText(lessonNum);
 
+    // pass off query and marking logic to quizitem??
+    // or do the switch in here?
+
+    // clear colors and contents
+    for (size_t j = 0; j < MAX_ROWS; ++j)
+    {
+        if (!isReverse)
+        {
+            qis[j]->dbForms.clear();
+            qis[j]->clearAll();
+        }
+        else
+        {
+            qrs[j]->dbForm.clear();
+            qrs[j]->clearAll();
+        }
+    }
+
+    // getQuery
     auto st = dbm.getStmt(
         "select id, inflected, head, parse, lesson from newmorphs where lesson <= ? order "
         "by random() limit ?");
     st.bind(1, lessonNum);
     st.bind(2, MAX_ROWS);
 
-    for (size_t j = 0; j < MAX_ROWS; ++j)
+    // loadResults
+    if (!isReverse)
     {
-        cs[j]->dbForms.clear();
-        cs[j]->clearAll();
+        size_t i{0};
+        while (st.executeStep())
+        {
+            dbEntry d;
+            d.id = st.getColumn("id").getInt();
+            d.head = st.getColumn("head").getString();
+            d.inflected = st.getColumn("inflected").getString();
+            d.parse = st.getColumn("parse").getString();
+            d.lesson = st.getColumn("lesson").getInt();
+            qis[i]->dbForms.push_back(d);
+            qis[i]->promptDb.setText(bc::beta2greek(d.inflected));
+            ++i;
+        }
+        getAlts();
+    }
+    else
+    {
+        size_t i{0};
+        while (st.executeStep())
+        {
+            dbEntry d;
+            d.id = st.getColumn("id").getInt();
+            d.head = st.getColumn("head").getString();
+            d.inflected = st.getColumn("inflected").getString();
+            d.parse = st.getColumn("parse").getString();
+            d.lesson = st.getColumn("lesson").getInt();
+            qrs[i]->dbForm = d;
+            qrs[i]->headwordDb.setText(bc::beta2greek(d.head));
+            qrs[i]->parseDb.setText(d.parse);
+            ++i;
+        }
     }
 
-    size_t i{0};
-    while (st.executeStep())
-    {
-        dbEntry d;
-        d.id = st.getColumn("id").getInt();
-        d.head = st.getColumn("head").getString();
-        d.inflected = st.getColumn("inflected").getString();
-        d.parse = st.getColumn("parse").getString();
-        d.lesson = st.getColumn("lesson").getInt();
-        cs[i]->dbForms.push_back(d);
-        cs[i]->promptDb.setText(bc::beta2greek(d.inflected));
-        ++i;
-    }
-
-    getAlts();
     userInputIsShown = true;
     quizIsMarked = false;
     redraw();
@@ -140,10 +182,10 @@ void App::getAlts()
     {
         std::vector<dbEntry> alts;
         dbEntry root;
-        root.id = cs[i]->dbForms[0].id;
-        root.head = cs[i]->dbForms[0].head;
-        root.inflected = cs[i]->dbForms[0].inflected;
-        root.parse = cs[i]->dbForms[0].parse;
+        root.id = qis[i]->dbForms[0].id;
+        root.head = qis[i]->dbForms[0].head;
+        root.inflected = qis[i]->dbForms[0].inflected;
+        root.parse = qis[i]->dbForms[0].parse;
         auto st = dbm.getStmt("select * from newmorphs where inflected = ? and parse != ?");
         st.bind(1, root.inflected);
         st.bind(2, root.parse);
@@ -159,7 +201,7 @@ void App::getAlts()
         }
         for (auto &alt : alts)
         {
-            cs[i]->dbForms.push_back(alt);
+            qis[i]->dbForms.push_back(alt);
         }
     }
 }
@@ -168,10 +210,21 @@ void App::markQuiz()
 {
     if (!userInputIsShown)
         return;
-    for (auto &conj : cs)
+    if (!isReverse)
     {
-        conj->mark();
-        conj->redraw();
+        for (auto &conj : qis)
+        {
+            conj->mark();
+            conj->redraw();
+        }
+    }
+    else
+    {
+        for (auto &qr : qrs)
+        {
+            qr->mark();
+            qr->redraw();
+        }
     }
     userInputIsShown = true;
     quizIsMarked = true;
@@ -180,16 +233,37 @@ void App::markQuiz()
 
 void App::draw(visage::Canvas &canvas)
 {
-    canvas.setColor(0xffbbbbbb);
+    canvas.setColor(0xffcccccc);
     canvas.fill(0, 0, width(), height());
 }
 
 void App::clearColors()
 {
-    for (auto conj : cs)
-    {
+    for (auto conj : qis)
         conj->clearAll();
+    for (auto qr : qrs)
+        qr->clearAll();
+    redraw();
+}
+
+void App::switchQs()
+{
+    body.removeAllChildren();
+    if (isReverse)
+    {
+        for (auto qi : qis)
+        {
+            body.addChild(qi);
+        }
     }
+    else
+    {
+        for (auto qr : qrs)
+        {
+            body.addChild(qr);
+        }
+    }
+    isReverse = !isReverse;
     redraw();
 }
 

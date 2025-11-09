@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
   src/App.cpp
   src/DbManager.cpp
   src/QuizItem.cpp
+  src/QuizRevItem.cpp
   src/Betacode.cpp
   libs/unibetacode/ub_utf8.c
   libs/unibetacode/ub_greek2beta.c

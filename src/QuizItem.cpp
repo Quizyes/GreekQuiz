@@ -11,25 +11,6 @@ namespace gwr::gkqz
 VISAGE_THEME_COLOR(WRONG, 0xff991212);
 VISAGE_THEME_COLOR(RIGHT, 0xff129912);
 
-std::ostream &operator<<(std::ostream &os, const QuizItem &qi)
-{
-    os << "QuizItem(" << std::endl;
-    // os << "userForm.id: \t" << 7 << std::endl;
-    // os << "userForm.head: \t" << qi.userForm.head << std::endl;
-    // os << "userForm.inflected: \t" << qi.userForm.inflected << std::endl;
-    // os << "userForm.parse: \t" << qi.userForm.parse << std::endl;
-    os << std::endl;
-    os << "dbForms[0].id: \t" << qi.dbForms[0].id << std::endl;
-    os << "dbForms[0].head: \t" << qi.dbForms[0].head << std::endl;
-    os << "dbForms[0].inflected: \t" << qi.dbForms[0].inflected << std::endl;
-    os << "dbForms[0].parse: \t" << qi.dbForms[0].parse << std::endl;
-    os << std::endl;
-    os << "entries with same inflected: " << qi.dbForms.size() << std::endl;
-    os << ");" << std::endl;
-
-    return os;
-}
-
 QuizItem::QuizItem()
 {
     layout().setFlex(true);
@@ -65,6 +46,7 @@ QuizItem::QuizItem()
     promptDb.setFont(fontGk.withSize(30.f));
     promptDb.layout().setDimensions(100_vw, 100_vh);
     promptDb.layout().setMargin(1_vh);
+    promptDb.just = visage::Font::Justification::kCenter;
 
     headwordDb.setFont(fontGk.withSize(30.f));
     headwordDb.layout().setDimensions(100_vw, 100_vh);
@@ -72,12 +54,12 @@ QuizItem::QuizItem()
 
     for (auto &fr : {&headwordUser, &parseUser})
     {
-        fr->setFont(fontGk.withSize(20.f));
+        fr->setFont(fontGk.withSize(25.f));
         fr->layout().setDimensions(100_vw, 49_vh);
         fr->setTextFieldEntry();
     }
-    headwordUser.setDefaultText("headword");
-    parseUser.setDefaultText("parse");
+    headwordUser.setDefaultText("headword...");
+    parseUser.setDefaultText("parse...");
 
     headwordUser.onTextChange() += [&]() {
         // mirror betacode with Greek
@@ -138,6 +120,7 @@ void QuizItem::show()
         idx = idxOfCorrectParse;
     auto &str = dbForms[idx].head;
     headwordDb.setText(bc::beta2greek(str));
+    headwordUser.setText(bc::beta2greek(userForm.head));
     parseDb.setText(dbForms[idx].parse);
     redraw();
 }
